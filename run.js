@@ -1,8 +1,9 @@
 require('dotenv').config();
 
 const puppeteer = require('puppeteer');
+const schedule = require('node-schedule');
 
-(async () => {
+const enrollASVZ = async () => {
   let browser = await puppeteer.launch({
     //userDataDir: "./user_data",
     headless: false
@@ -46,4 +47,9 @@ const puppeteer = require('puppeteer');
   await page.screenshot({path: 'final.png'});
 
   await browser.close();
-})();
+};
+
+schedule.scheduleJob('15 00 18 * * 0', function(){
+  console.log('Enrollment started.');
+  enrollASVZ();
+});
