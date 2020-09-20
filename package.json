@@ -1,0 +1,26 @@
+{
+  "name": "asvz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "run.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-schedule": "^1.3.2",
+    "puppeteer": "^5.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node run.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bouzaien/asvz-auto-enroll.git"
+  },
+  "author": "Mokhles Bouzaien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bouzaien/asvz-auto-enroll/issues"
+  },
+  "homepage": "https://github.com/bouzaien/asvz-auto-enroll#readme"
+}
