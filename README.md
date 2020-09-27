@@ -1,17 +1,18 @@
 # ASVZ Auto Enroll
-This script is used to automatically enroll to ASVZ (https://www.asvz.ch/) events.
+This script is used to automatically enroll to [ASVZ](https://www.asvz.ch/) events.
 
 ## Usage
 ```bat
-node run.js arg1 [arg2 [arg3 [...]]]
+node run.js event_1 [event_2 [event_3 [...]]]
 ```
 
 ## Events File
-The `events.json` contains the list of events to be considered as well as the `cron` schedule expressions and the `baseID`. The `baseID` is calculated such that `baseID + week_number = eventID`.
+The `events.json` contains the list of events to be considered as well as the `cron` schedule expressions and the `baseID`. The `baseID` is calculated such that `baseID + week_number = eventID`. The `eventID` can be found in the event URL: `https://schalter.asvz.ch/tn/lessons/<eventID>`.
 ```json
 {
-    "arg1": {
-        "cron": "00 00 17 * * 0", // for “At 17:00:00 on Sunday.” 
+    "event_1": {
+        "cron": "00 00 17 * * 0",
+        "//": "At 17:00:00 on Sunday.",
         "baseID": 000000
     },
 
@@ -19,7 +20,7 @@ The `events.json` contains the list of events to be considered as well as the `c
 
     },
 
-    "arg_N": {
+    "event_N": {
         "cron": "* * * * * *",
         "baseID": 123456
     }
