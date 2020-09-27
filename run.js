@@ -7,7 +7,7 @@ const puppeteer = require('puppeteer');
 const schedule = require('node-schedule');
 const fs = require('fs');
 
-var myArgs = process.argv.slice(2); // node run.js <eventID> "<cron>"
+var myArgs = process.argv.slice(2);
 let rawdata = fs.readFileSync('events.json');
 let event_config = JSON.parse(rawdata);
 
