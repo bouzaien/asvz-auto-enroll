@@ -1,34 +1,38 @@
-require('dotenv').config();
 var moment = require('moment'); // used to retreive week number
+
+require('dotenv').config();
 require('log-timestamp')(function() { return '[' + moment(new Date()).format('YYYY-MM-DD HH:mm:ss') + '] -'});
 
 const puppeteer = require('puppeteer');
 const schedule = require('node-schedule');
+const fs = require('fs');
 
-var myArgs = process.argv.slice(2); // node run.js <param>
+var myArgs = process.argv.slice(2); // node run.js <eventID> "<cron>"
+let rawdata = fs.readFileSync('events.json');
+let event_config = JSON.parse(rawdata);
 
-if (myArgs[0]=='mon'){
-  var sch = '55 59 17 * * 0'; // scheduled for monday at 18:00:15
-  var eventID = moment().week() + 134224; // 39 => 134263
-} else if (myArgs[0]=='wed'){
-  var sch = '55 59 19 * * 2'; // scheduled for thursday at 19:15:15
-  var eventID = moment().week() + 134437; // 40 => 134477
-} else if (myArgs[0]=='thu'){
-  var sch = '55 14 19 * * 3'; // scheduled for thursday at 19:15:15
-  var eventID = moment().week() + 134621; // 39 => 134660
+if (myArgs.length < 1) {
+  console.log(myArgs.length + ' arguments given. Use "node run.js arg1 [arg2 [arg3 [...]]]"');
+  process.exit();
 } else {
-  var sch = myArgs[1];
-  var eventID = myArgs[0];
+  console.log('Arguments: ' + myArgs);
 };
 
-var eventURL = 'https://schalter.asvz.ch/tn/lessons/' + eventID.toString();
+for (let i = 0; i < myArgs.length; i++) {
+  let sch = event_config[myArgs[i]]["cron"]
+  let eventID = moment().week() + event_config[myArgs[i]]["baseID"];
+  let eventURL = 'https://schalter.asvz.ch/tn/lessons/' + eventID.toString();
+  schedule.scheduleJob(sch, function(){
+    enrollASVZ(eventID, eventURL);
+  });
+}
 
-const enrollASVZ = async (eventURL) => {
+const enrollASVZ = async (eventID, eventURL) => {
   console.log('Enrollment for ' + eventID.toString() + ' has started.');
   console.log('Opening browser ...');
   let browser = await puppeteer.launch({
     //userDataDir: "./user_data",
-    headless: false
+    //headless: false
   });
   
   const page = await browser.newPage();
@@ -62,16 +66,10 @@ const enrollASVZ = async (eventURL) => {
 
   await page.waitForSelector('.table');
   console.log('Opening', eventURL, '...');
-  await page.goto(eventURL); // TODO: dynamic lesson id
+  await page.goto(eventURL);
   await page.waitForSelector('.enrollmentPlacePadding');
   await page.click('button[id="btnRegister"]');
 
   await browser.close();
   console.log('Enrollment for ' + eventID.toString() + ' has finished.');
 };
-
-schedule.scheduleJob(sch, function(){
-  enrollASVZ(eventURL);
-});
-
-//console.log(moment().week() + 134224);
