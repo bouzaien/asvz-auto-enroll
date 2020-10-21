@@ -34,7 +34,7 @@ const enrollASVZ = async (eventID, eventURL, click_cron) => {
   console.log('Enrollment for ' + eventID.toString() + ' has started.');
   console.log('Opening browser ...');
   let browser = await puppeteer.launch({
-    //executablePath: 'chromium-browser' // when running on Raspberry Pi
+    executablePath: 'chromium-browser' // when running on Raspberry Pi
     //headless: false
   });
   
