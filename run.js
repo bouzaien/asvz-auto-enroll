@@ -18,20 +18,23 @@ if (myArgs.length < 1) {
   console.log('Arguments: ' + myArgs);
 };
 
+
+
 for (let i = 0; i < myArgs.length; i++) {
   let sch = event_config[myArgs[i]]["cron"]
   let eventID = moment().week() + event_config[myArgs[i]]["baseID"];
   let eventURL = 'https://schalter.asvz.ch/tn/lessons/' + eventID.toString();
+  let click_cron = event_config[myArgs[i]]["click_cron"]
   schedule.scheduleJob(sch, function(){
-    enrollASVZ(eventID, eventURL);
+    enrollASVZ(eventID, eventURL, click_cron);
   });
 }
 
-const enrollASVZ = async (eventID, eventURL) => {
+const enrollASVZ = async (eventID, eventURL, click_cron) => {
   console.log('Enrollment for ' + eventID.toString() + ' has started.');
   console.log('Opening browser ...');
   let browser = await puppeteer.launch({
-    //userDataDir: "./user_data",
+    //executablePath: 'chromium-browser' // when running on Raspberry Pi
     //headless: false
   });
   
@@ -67,9 +70,10 @@ const enrollASVZ = async (eventID, eventURL) => {
   await page.waitForSelector('.table');
   console.log('Opening', eventURL, '...');
   await page.goto(eventURL);
-  await page.waitForSelector('.enrollmentPlacePadding');
-  await page.click('button[id="btnRegister"]');
+  await page.waitForSelector('#btnRegister');
 
-  await browser.close();
-  console.log('Enrollment for ' + eventID.toString() + ' has finished.');
+  schedule.scheduleJob(click_cron, function(){
+    page.click('button[id="btnRegister"]');
+  });
+
 };
