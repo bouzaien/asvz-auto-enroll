@@ -21,11 +21,11 @@ if (myArgs.length < 1) {
 
 
 for (let i = 0; i < myArgs.length; i++) {
-  let sch = event_config[myArgs[i]]["cron"]
-  let eventID = moment().week() + event_config[myArgs[i]]["baseID"];
-  let eventURL = 'https://schalter.asvz.ch/tn/lessons/' + eventID.toString();
+  let sch = event_config[myArgs[i]]["cron"];
   let click_cron = event_config[myArgs[i]]["click_cron"]
   schedule.scheduleJob(sch, function(){
+    let eventID = moment().week() + event_config[myArgs[i]]["baseID"];
+    let eventURL = 'https://schalter.asvz.ch/tn/lessons/' + eventID.toString();
     enrollASVZ(eventID, eventURL, click_cron);
   });
 }
@@ -34,8 +34,8 @@ const enrollASVZ = async (eventID, eventURL, click_cron) => {
   console.log('Enrollment for ' + eventID.toString() + ' has started.');
   console.log('Opening browser ...');
   let browser = await puppeteer.launch({
+    //headless: false,
     executablePath: 'chromium-browser' // when running on Raspberry Pi
-    //headless: false
   });
   
   const page = await browser.newPage();

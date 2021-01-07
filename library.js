@@ -20,6 +20,7 @@ sch = myArgs[1]; // "0 0 8 * * 0"
 
 const checkin = async (rn) => {
     let browser = await puppeteer.launch({
+      executableParh: 'chromium-browser',
       //userDataDir: "./user_data",
       headless: false
     });
